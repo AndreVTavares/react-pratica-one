@@ -69,8 +69,8 @@ export function App() {
             })}
           </TableBody>
         </Table>
-            
-        {/**<Pagination/> */}
+
+        <Pagination/> 
 
       </main>
     </div>
