@@ -91,31 +91,35 @@ export function App() {
                   </Dialog.Description>
                 </div>
 
-                <CreateTagForm/>
+                <CreateTagForm />
                 <Dialog.Close />
               </Dialog.Content>
             </Dialog.Portal>
           </Dialog.Root>
         </div>
 
-        <div className='flex items-center justify-between'>
-          <div className='flex items-center'>
+        <div className="flex items-center justify-between">
+          <form onSubmit={handleFilter} className="flex items-center gap-2">
             <Input variant='filter'>
-              <Search className='size-3' />
+              <Search className="size-3" />
               <Control
-                placeholder='Search tags...'
-                onChange={event => setFilter(event.target.value)}
+                placeholder="Search tags..."
+                onChange={e => setFilter(e.target.value)}
                 value={filter}
               />
             </Input>
-          </div>
+            <Button type="submit">
+              <Filter className="size-3" />
+              Apply filters
+            </Button>
+          </form>
 
-          <Button onClick={handleFilter}>
-            <FileDown className='size-3' />
-            <Filter className="size-3" />
-            Apply filters
+          <Button>
+            <FileDown className="size-3" />
+            Export
           </Button>
         </div>
+
 
         <Table>
           <TableHeader>
@@ -134,7 +138,7 @@ export function App() {
                   <TableCell>
                     <div className='flex flex-col gap-0.5'>
                       <span className='font-medium' >{tag.title}</span>
-                      <span className='text-xs text-zinc-500'>{tag.id}</span>
+                      <span className='text-xs text-zinc-500'>{tag.slug}</span>
                     </div>
                   </TableCell>
                   <TableCell className='text-zinc-300'>
