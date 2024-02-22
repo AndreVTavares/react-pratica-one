@@ -1,4 +1,4 @@
-import { FileDown, MoreHorizontal, Plus, Search } from 'lucide-react'
+import { FileDown, MoreHorizontal, Plus, Search, Filter } from 'lucide-react'
 import { Header } from './components/header'
 import { Tabs } from './components/tabs'
 import { Button } from './components/ui/button'
@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { Pagination } from './components/pagination'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'react-router-dom'
+import { useState } from 'react'
 
 export interface TagResponse {
   first: number
@@ -26,7 +27,8 @@ export interface Tag {
 }
 
 export function App() {
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [filter, setFilter] = useState('')
 
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1
 
@@ -39,8 +41,19 @@ export function App() {
       return data
     },
 
-    placeholderData: keepPreviousData
+    placeholderData: keepPreviousData,
   })
+
+  function handleFilter() {
+    setSearchParams(params => {
+      params.set('page', '1')
+      params.set('filter', filter)
+
+      return params
+    })
+
+
+  }
 
   if (isLoading) {
     return null
@@ -64,14 +77,21 @@ export function App() {
         </div>
 
         <div className='flex items-center justify-between'>
-          <Input variant='filter'>
-            <Search className='size-3' />
-            <Control placeholder='Search tags...' />
-          </Input>
+          <div className='flex items-center'>
+            <Input variant='filter'>
+              <Search className='size-3' />
+              <Control
+                placeholder='Search tags...'
+                onChange={event => setFilter(event.target.value)}
+                value={filter}
+              />
+            </Input>
+          </div>
 
-          <Button>
+          <Button onClick={handleFilter}>
             <FileDown className='size-3' />
-            Export
+            <Filter className="size-3" />
+            Apply filters
           </Button>
         </div>
 
