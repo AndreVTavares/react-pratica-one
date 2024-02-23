@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from "./ui/button";
 import * as Dialog from '@radix-ui/react-dialog'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 const createTagSchema = z.object({
     title: z.string().min(3, { message: 'Minimum 3 characters' }),
@@ -21,9 +22,9 @@ function getSlugFromString(input: string): string {
 }
 
 
-
-
 export function CreateTagForm() {
+    const queryClient = useQueryClient()
+
     const { register, handleSubmit, watch, formState } = useForm<CreateTagSchema>({
         resolver: zodResolver(createTagSchema)
     })
@@ -32,18 +33,30 @@ export function CreateTagForm() {
         ? getSlugFromString(watch('title'))
         : ''
 
-    async function createTag({ title}: CreateTagSchema) {
-        await fetch('http://localhost:3333/tags', {
-            method: 'POST',
-            body: JSON.stringify({
-                title,
-                slug,
-                amountOfVideos: 0,
+
+    const { mutateAsync } = useMutation({
+        mutationFn: async ({ title }: CreateTagSchema) => {
+            await fetch('http://localhost:3333/tags', {
+                method: 'POST',
+                body: JSON.stringify({
+                    title,
+                    slug,
+                    amountOfVideos: 0,
+                })
             })
-        })
+        },
+
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['get-tags']
+            })
+        }
+    })
+    async function createTag({ title }: CreateTagSchema) {
+        await mutateAsync({ title })
     }
 
-    
+
     return (
         <form onSubmit={handleSubmit(createTag)} className='w-full space-y-6'>
             <div className='space-y-2'>
@@ -79,7 +92,7 @@ export function CreateTagForm() {
                 </Dialog.Close>
 
                 <Button disabled={formState.isSubmitting} className='bg-teal-400 text-teal-950'>
-                    {formState.isSubmitting ? <Loader2 className='size-3 animate-spin'/> : <Check className='size-3' />}
+                    {formState.isSubmitting ? <Loader2 className='size-3 animate-spin' /> : <Check className='size-3' />}
                     Save
                 </Button>
             </div>

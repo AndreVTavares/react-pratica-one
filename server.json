@@ -1259,6 +1259,24 @@
       "title": "teste de animação",
       "slug": "teste-de-animacao",
       "amountOfVideos": 0
+    },
+    {
+      "id": "04d4",
+      "title": "teste com mutation",
+      "slug": "teste-com-mutation",
+      "amountOfVideos": 0
+    },
+    {
+      "id": "0dd2",
+      "title": "teste de mutation 2",
+      "slug": "teste-de-mutation-2",
+      "amountOfVideos": 0
+    },
+    {
+      "id": "649e",
+      "title": "teste de mutation 3",
+      "slug": "teste-de-mutation-3",
+      "amountOfVideos": 0
     }
   ]
 }
